@@ -6,6 +6,7 @@ Django backend and vanilla JavaScript frontend for a contacts app. The purpose o
 
 Requires [Python](https://www.python.org/) 3.6+ with [Pipenv](https://docs.pipenv.org/) – just `pip install pipenv` and you're ready to go.
 
+1. Copy `.env.sample` as `.env` and adjust your settings
 1. Install de dependencies:<br>`$ pipenv install`
 1. Activate the environment:<br>`$ pipenv shell`
 1. Run the project:<br>`$ python manage.py runserver`
