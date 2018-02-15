@@ -15,6 +15,7 @@ python_version = "3.6"
 dj-database-url = "*"
 django = "*"
 python-decouple = "*"
+whitenoise = "*"
 
 
 [dev-packages]
