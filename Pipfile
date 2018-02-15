@@ -13,10 +13,12 @@ python_version = "3.6"
 [packages]
 
 dj-database-url = "*"
-django = "*"
+Django = "*"
 python-decouple = "*"
 whitenoise = "*"
 
 
 [dev-packages]
 
+ipdb = "*"
+prospector = "*"
