@@ -12,6 +12,7 @@ python_version = "3.6"
 
 [packages]
 
+dj-database-url = "*"
 django = "*"
 python-decouple = "*"
 
