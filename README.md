@@ -8,3 +8,4 @@ Requires [Python](https://www.python.org/) 3.6+ with [Pipenv](https://docs.pipen
 
 1. Install de dependencies:<br>`$ pipenv install`
 1. Activate the environment:<br>`$ pipenv shell`
+1. Run the project:<br>`$ python manage.py runserver`
