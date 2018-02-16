@@ -13,9 +13,10 @@ python_version = "3.6"
 [packages]
 
 dj-database-url = "*"
-Django = "*"
+django = "*"
 python-decouple = "*"
 whitenoise = "*"
+"psycopg2" = "*"
 
 
 [dev-packages]
