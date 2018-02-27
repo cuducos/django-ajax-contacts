@@ -17,6 +17,7 @@ django = "*"
 python-decouple = "*"
 whitenoise = "*"
 "psycopg2" = "*"
+mixer = "*"
 
 
 [dev-packages]
