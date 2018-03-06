@@ -1,0 +1,49 @@
+.container-fluid {
+  margin: 3rem auto;
+  max-width: 62%;
+}
+
+/* Header */
+
+header {
+  border-bottom: 1px solid gray;
+  margin-bottom: 3rem;
+}
+
+header div {
+  line-height: 3rem;
+  vertical-align: middle;
+}
+
+/* Sidebar */
+
+aside li {
+  cursor: pointer;
+  padding: 2rem 0;
+  opacity: 0.75;
+  font-size: 1.9rem;
+}
+
+aside li.active,
+aside li:hover {
+  opacity: 1
+}
+
+aside img {
+  width: 2.6rem;
+}
+
+/* Contact details */
+
+article h2 ,
+article dd {
+  margin: 0 0 2rem 0;
+}
+
+article img {
+  width: 7rem;
+}
+
+article a {
+  color: inherit;
+}
