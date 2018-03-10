@@ -15,3 +15,6 @@ class Contact(models.Model):
         default = f'https://api.adorable.io/avatars/256/{email}.png'
         params = urlencode({'d': default, 's': 512})
         return f'https://www.gravatar.com/avatar/{hash}?{params}'
+
+    class Meta:
+        ordering = ['name']
