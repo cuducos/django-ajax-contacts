@@ -115,4 +115,74 @@ var load_contacts = function () {
   ajax('/contacts/', 'GET', success, fail, error_);
 };
 
+var form_group = function (field_name, field_label, field_type) {
+  var div = document.createElement('div');
+  var label = document.createElement('label');
+  var input = document.createElement('input');
+
+  label.setAttribute('for', field_name);
+  label.innerHTML = field_label;
+
+  input.setAttribute('type', field_type);
+  input.setAttribute('id', field_name);
+  input.className = 'form-control input-sm';
+
+  div.className = 'form-group';
+  div.appendChild(label);
+  div.appendChild(input);
+
+  return div;
+};
+
+var show_form = function () {
+  var article = document.querySelector('article');
+  article.innerHTML = '';
+
+  var h2 = document.createElement('h2');
+  var form = document.createElement('form');
+  var name = form_group('name', 'Nome', 'text');
+  var telephone = form_group('telephone', 'Telefone', 'text');
+  var email = form_group('email', 'E-mail', 'email');
+  var p = document.createElement('p');
+  var button = document.createElement('button');
+
+  h2.innerHTML = 'Novo contato';
+
+  button.setAttribute('type', 'submit');
+  button.className = 'btn btn-default';
+  button.innerHTML = 'Salvar';
+
+  p.className = 'pull-right';
+  p.appendChild(button);
+
+  form.setAttribute('role', 'form');
+  form.appendChild(name);
+  form.appendChild(telephone);
+  form.appendChild(email);
+  form.appendChild(p);
+  form.onsubmit = new_contact;
+
+  article.appendChild(h2);
+  article.appendChild(form);
+
+};
+
+var new_contact = function (e) {
+  e.preventDefault();
+
+  var name = document.forms[0].name.value;
+  var telephone = document.forms[0].telephone.value;
+  var email = document.forms[0].email.value;
+  var url = document.querySelector('article').dataset.newContactUrl;
+
+  console.log(name);
+  console.log(telephone);
+  console.log(email);
+  console.log(url);
+  // TODO send POST request to Django via Ajax
+  // TODO reload all contacts in the aside node
+
+};
+
 load_contacts();
+document.querySelector('button.new').onclick = show_form;

@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, render, resolve_url
 
 from contacts.core.models import Contact
@@ -22,6 +22,20 @@ def contact_detail(request, pk):
         phone=contact.fone
     )
     return JsonResponse(response)
+
+
+def contacts_new(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+
+    data = {
+        key: value for key, value in request.POST.items()
+        if key in ('name', 'telephone', 'email')
+    }
+    contact = Contact.objects.create(**data)
+    output = _contact_summary(contact)
+
+    return JsonResponse(output, status_code=201)
 
 
 def _contact_summary(contact):
