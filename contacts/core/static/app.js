@@ -17,6 +17,16 @@ var ajax = function(url, method, success, fail, error_) {
   request.send();
 };
 
+var enable_edit_button = function () {
+  var button = document.querySelector('button.edit');
+  var current_classes = button.className.split(' ');
+  var new_classes = current_classes.filter(
+    function (cls) { return cls != 'hide'; }
+  );
+  button.className = new_classes.join(' ');
+  button.removeAttribute('disabled');
+};
+
 var contact_details = function (e) {
   var url = e.target.dataset.url;
 
@@ -70,6 +80,8 @@ var contact_details = function (e) {
 
     article.appendChild(h2);
     article.appendChild(dl);
+
+    enable_edit_button();
   };
 
   ajax(url, 'GET', success, fail, error_);
