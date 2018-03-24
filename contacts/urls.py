@@ -17,14 +17,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from contacts.core.views import contact_detail, contacts, home
+from contacts.core.views import contact_detail, contacts, contacts_new, home
 
 
 urlpatterns = [
     path('', home, name='home'),
     path('contacts/<int:pk>/', contact_detail, name='contact-details'),
-    path('contacts/', contacts, name='contacts')
-
+    path('contacts/', contacts, name='contacts'),
+    path('contacts/new/', contacts_new, name='contacts-new')
 ]
 
 if settings.DEBUG:
