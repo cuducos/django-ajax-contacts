@@ -14,12 +14,20 @@ def contacts(request):
 
 
 def contact_detail(request, pk):
-    contact = get_object_or_404(Contact, pk=pk)
+    if request.method == 'POST':
+        data = (request.POST.get(key) for key in ('name', 'fone', 'email'))
+        contact = Contact.objects.get(pk=pk)
+        contact.name, contact.fone, contact.email = data
+        contact.save()
+    else:
+        contact = get_object_or_404(Contact, pk=pk)
+
     response = dict(
         name=contact.name,
         avatar=contact.avatar(),
         email=contact.email,
-        phone=contact.fone
+        phone=contact.fone,
+        url=resolve_url('contact-details', pk=contact.pk)
     )
     return JsonResponse(response)
 

@@ -1,3 +1,7 @@
+/****************************************************************************/
+/* Boilerplate                                                               /
+/****************************************************************************/
+
 var fail = function (request) {};
 var error_ = function () {};
 
@@ -24,7 +28,12 @@ var ajax = function(url, method, data, success, fail, error_) {
   }
 };
 
-var enable_edit_button = function () {
+
+/****************************************************************************/
+/* Contact details                                                           /
+/****************************************************************************/
+
+var enable_edit_button = function (contact) {
   var button = document.querySelector('button.edit');
   var current_classes = button.className.split(' ');
   var new_classes = current_classes.filter(
@@ -32,6 +41,17 @@ var enable_edit_button = function () {
   );
   button.className = new_classes.join(' ');
   button.removeAttribute('disabled');
+  button.onclick = function () {
+    show_form(contact);
+  };
+};
+
+var disable_edit_button = function () {
+  var button = document.querySelector('button.edit');
+  if (button.className.indexOf('hide') == -1) {
+    button.className += ' hide';
+  }
+  button.setAttribute('disabled', true);
 };
 
 var show_contact_details = function (contact) {
@@ -76,8 +96,9 @@ var show_contact_details = function (contact) {
 
   article.appendChild(h2);
   article.appendChild(dl);
+  article.dataset.editContactUrl = contact.url;
 
-  enable_edit_button();
+  enable_edit_button(contact);
 
 };
 
@@ -98,7 +119,12 @@ var load_contact_details = function (e) {
   ajax(url, 'GET', {},  success, fail, error_);
 };
 
-var show_contact = function (contact, contact_list) {
+
+/****************************************************************************/
+/* Contact list                                                              /
+/****************************************************************************/
+
+var add_to_contact_list = function (contact, contact_list) {
   var li = document.createElement('li');
   var img = document.createElement('img');
   var name = document.createTextNode(contact.name);
@@ -123,14 +149,19 @@ var load_contacts = function () {
 
     for (var i = 0; i < resp.contacts.length; i++) {
       var contact = resp.contacts[i];
-      show_contact(contact, contacts);
+      add_to_contact_list(contact, contacts);
     }
   };
 
   ajax('/contacts/', 'GET', {},  success, fail, error_);
 };
 
-var form_group = function (field_name, field_label, field_type) {
+
+/****************************************************************************/
+/* Forms                                                                     /
+/****************************************************************************/
+
+var form_group = function (field_name, field_label, field_type, value) {
   var div = document.createElement('div');
   var label = document.createElement('label');
   var input = document.createElement('input');
@@ -141,6 +172,9 @@ var form_group = function (field_name, field_label, field_type) {
   input.setAttribute('type', field_type);
   input.setAttribute('id', field_name);
   input.className = 'form-control input-sm';
+  if (Boolean(value)) {
+    input.setAttribute('value', value);
+  }
 
   div.className = 'form-group';
   div.appendChild(label);
@@ -149,19 +183,35 @@ var form_group = function (field_name, field_label, field_type) {
   return div;
 };
 
-var show_form = function () {
+var show_form = function (contact) {
+  disable_edit_button();
+
   var article = document.querySelector('article');
   article.innerHTML = '';
 
+
+  var name_value = '';
+  var telephone_value = '';
+  var email_value = '';
+  if (Boolean(contact)) {
+    name_value = contact.name;
+    telephone_value = contact.phone;
+    email_value = contact.email;
+  }
+
   var h2 = document.createElement('h2');
   var form = document.createElement('form');
-  var name = form_group('name', 'Nome', 'text');
-  var telephone = form_group('telephone', 'Telefone', 'text');
-  var email = form_group('email', 'E-mail', 'email');
+  var name = form_group('name', 'Nome', 'text', name_value);
+  var telephone = form_group('telephone', 'Telefone', 'text', telephone_value);
+  var email = form_group('email', 'E-mail', 'email', email_value);
   var p = document.createElement('p');
   var button = document.createElement('button');
 
-  h2.innerHTML = 'Novo contato';
+  if (Boolean(contact)) {
+    h2.innerHTML = 'Editar contato';
+  } else {
+    h2.innerHTML = 'Novo contato';
+  }
 
   button.setAttribute('type', 'submit');
   button.className = 'btn btn-default';
@@ -175,34 +225,58 @@ var show_form = function () {
   form.appendChild(telephone);
   form.appendChild(email);
   form.appendChild(p);
-  form.onsubmit = new_contact;
+
+  if (Boolean(contact)) {
+    form.onsubmit = edit_contact;
+  } else {
+    form.onsubmit = new_contact;
+  }
 
   article.appendChild(h2);
   article.appendChild(form);
 
 };
 
-var new_contact = function (e) {
-  e.preventDefault();
 
+/****************************************************************************/
+/* User actions                                                              /
+/****************************************************************************/
+
+var get_form_data = function () {
   var name = document.forms[0].name.value;
   var telephone = document.forms[0].telephone.value;
   var email = document.forms[0].email.value;
-  var url = document.querySelector('article').dataset.newContactUrl;
-  var data = 'name=' + encodeURI(name) + '&fone=' + encodeURI(telephone) + '&email=' + encodeURI(email);
 
   var article = document.querySelector('article');
   article.innerHTML = '';
 
-  var success = function (request) {
-    var contact = JSON.parse(request.responseText);
-    show_contact_details(contact);
-    load_contacts();
-  };
-
-  ajax(url, 'POST', data, success, fail, error_);
-
+  return 'name=' + encodeURI(name) + '&fone=' + encodeURI(telephone) + '&email=' + encodeURI(email);
 };
+
+var success_insert_or_update = function (request) {
+  var contact = JSON.parse(request.responseText);
+  show_contact_details(contact);
+  load_contacts();
+};
+
+var new_contact = function (e) {
+  e.preventDefault();
+  var url = document.querySelector('article').dataset.newContactUrl;
+  var data = get_form_data();
+  ajax(url, 'POST', data, success_insert_or_update, fail, error_);
+};
+
+var edit_contact = function (e) {
+  e.preventDefault();
+  var url = document.querySelector('article').dataset.editContactUrl;
+  var data = get_form_data();
+  ajax(url, 'POST', data, success_insert_or_update, fail, error_);
+};
+
+
+/****************************************************************************/
+/* Init                                                                      /
+/****************************************************************************/
 
 load_contacts();
 document.querySelector('button.new').onclick = show_form;
