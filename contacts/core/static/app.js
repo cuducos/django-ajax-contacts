@@ -189,11 +189,10 @@ var show_form = function (contact) {
   var article = document.querySelector('article');
   article.innerHTML = '';
 
-
   var name_value = '';
   var telephone_value = '';
   var email_value = '';
-  if (Boolean(contact)) {
+  if (contact.constructor.name !== 'MouseEvent') {
     name_value = contact.name;
     telephone_value = contact.phone;
     email_value = contact.email;
@@ -207,7 +206,7 @@ var show_form = function (contact) {
   var p = document.createElement('p');
   var button = document.createElement('button');
 
-  if (Boolean(contact)) {
+  if (contact.constructor.name !== 'MouseEvent') {
     h2.innerHTML = 'Editar contato';
   } else {
     h2.innerHTML = 'Novo contato';
@@ -226,7 +225,7 @@ var show_form = function (contact) {
   form.appendChild(email);
   form.appendChild(p);
 
-  if (Boolean(contact)) {
+  if (contact.constructor.name !== 'MouseEvent') {
     form.onsubmit = edit_contact;
   } else {
     form.onsubmit = new_contact;
